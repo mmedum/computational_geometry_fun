@@ -2,19 +2,19 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <time.h>
-#include <limits.h>
 #define CLOCK CLOCK_PROCESS_CPUTIME_ID
-
-
 // returns the difference in milliseconds.
 long timespec_diff(struct timespec *strt, struct timespec *stp) {
     return (stp->tv_sec-strt->tv_sec-1)*1000+(1000000000+stp->tv_nsec-strt->tv_nsec)/1000000;
 }
 
-int run_algo(int n, int step){
-    int *A,sum;
+int main(int argn,char **argv){
+    int n,sum, *A,step;
     long i,j;
     struct timespec ptime,ctime;
+    // Read ’n’ and the ’step’ size.
+    sscanf(argv[1], "%d",&n);
+    sscanf(argv[2], "%d",&step);
     // Allocate and initialize array A so -O3 does not annoy us.
     A = (int *)malloc(n*sizeof(int));
     for (i=0; i<n ; i++) A[i]=i;
@@ -28,9 +28,7 @@ int run_algo(int n, int step){
     asm ("nop");
     // The real thing ...
     for (j=0 ; j<max ; j++)
-        for (i=0; i<n; i=i+step){
-            sum += A[i];
-        }
+        for (i=0; i<n; i=i+step) sum += A[i];
     // a nop again...
     asm ("nop");
     // Get the finishing time
@@ -39,25 +37,3 @@ int run_algo(int n, int step){
     // Return something to fool -O3
     return sum%2;
 }
-
-void run_test(int n, int step){
-    int i, number;
-    // max is 2^20
-    for(i=step; i<1048576; i=i*2){
-        number = n;
-        do {
-            run_algo(number, i);
-            number = number * 2;
-        } while( number < INT_MAX/2);
-    }
-}
-
-int main(int argn,char **argv){
-    int n, step;
-    // Read ’n’ and the ’step’ size.
-    sscanf(argv[1], "%d",&n);
-    sscanf(argv[2], "%d",&step);
-    run_test(n, step);
-    return 0;
-}
-

@@ -13,6 +13,7 @@ long timespec_diff(struct timespec *strt, struct timespec *stp) {
 
 int run_algo(int n, int step){
     int *A,sum;
+    FILE *pFile;
     long i,j;
     struct timespec ptime,ctime;
     // Allocate and initialize array A so -O3 does not annoy us.
@@ -36,8 +37,11 @@ int run_algo(int n, int step){
     // Get the finishing time
     clock_gettime(CLOCK,&ctime);
     printf("size: %ld, step: %d and time Elapsed: %ld milliseconds\n",n*sizeof(int),step,timespec_diff(&ptime,&ctime));
-    // Return something to fool -O3
+    pFile = fopen("output.csv", "a");
+    fprintf(pFile, "%ld,%d,%ld\n",n*sizeof(int),step,timespec_diff(&ptime,&ctime));
+    fclose(pFile);
     free(A);
+    // Return something to fool -O3
     return sum%2;
 }
 

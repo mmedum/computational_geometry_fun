@@ -37,6 +37,7 @@ int run_algo(int n, int step){
     clock_gettime(CLOCK,&ctime);
     printf("size: %ld, step: %d and time Elapsed: %ld milliseconds\n",n*sizeof(int),step,timespec_diff(&ptime,&ctime));
     // Return something to fool -O3
+    free(A);
     return sum%2;
 }
 
@@ -48,7 +49,7 @@ void run_test(int n, int step){
         do {
             run_algo(number, i);
             number = number * 2;
-        } while( number < INT_MAX/2);
+        } while( number < INT_MAX/sizeof(int));
     }
 }
 

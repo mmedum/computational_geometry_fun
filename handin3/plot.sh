@@ -1,0 +1,1 @@
+ gnuplot -e "set term png size 1200,800; set datafile separator ','; set output 'points.png'; set xrange [0:10]; set yrange [0:10]; plot 'points' using 1:2:(sprintf('(%d, %d)', \$1, \$2)) with labels point  pt 7 offset char 1,1 notitle;"

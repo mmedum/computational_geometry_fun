@@ -26,9 +26,10 @@ def read_points(path):
     return points
 
 
-def output_convex_hull(quick_hull):
+def output_convex_hull(title, quick_hull):
+    print(title)
     for c in quick_hull:
-        print(c)
+        print('({}, {})'.format(c[0], c[1]))
 
 
 # Three points are a counter-clockwise turn if ccw > 0, clockwise if
@@ -62,36 +63,28 @@ def find_point_with_largest_distance(line_segment, points):
 
 
 def rec_quick_hull(line_segment, points):
-    print('POINTS {}'.format(points))
     if len(points) == 0 or points is None:
-        print('HERE {}'.format(output_convex_hull(points)))
-        return [line_segment[0], line_segment[1]]
+        return (line_segment[0], line_segment[1])
     largest_distance_point = find_point_with_largest_distance(line_segment, points)
     upper_hull = []
-    upper_hull.append(largest_distance_point)
 
     left_points = []
     right_points = []
     for p in points:
         if p.x <= largest_distance_point.x:
-            left_points.append(p)
+            if p.x != largest_distance_point.x or p.y != largest_distance_point.y:
+                left_points.append(p)
         else:
             right_points.append(p)
 
-    print('left {}'.format(output_convex_hull(left_points)))
-    print('Right {}'.format(output_convex_hull(right_points)))
-
     left_line_segment = (line_segment[0], largest_distance_point)
     left_pruned_points = prune(left_line_segment, left_points)
-    print('Left Prune {}'.format(output_convex_hull(left_pruned_points)))
 
     right_line_segment = (largest_distance_point, line_segment[1])
     right_pruned_points = prune(right_line_segment, right_points)
-    print('Right Prune {}'.format(output_convex_hull(right_pruned_points)))
 
-    upper_hull.extend(rec_quick_hull(left_line_segment, left_pruned_points))
-    print('Upper {}'.format(output_convex_hull(upper_hull)))
-    upper_hull.extend(rec_quick_hull(right_line_segment, right_pruned_points))
+    upper_hull.append(rec_quick_hull(left_line_segment, left_pruned_points))
+    upper_hull.append(rec_quick_hull(right_line_segment, right_pruned_points))
     return upper_hull
 
 
@@ -107,4 +100,4 @@ def quick_hull(points):
 if __name__ == '__main__':
     points = read_points('points')
     upper_hull = quick_hull(points)
-#    output_convex_hull(upper_hull)
+    output_convex_hull('quick_hull', upper_hull)

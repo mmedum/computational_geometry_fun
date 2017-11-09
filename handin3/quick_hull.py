@@ -21,7 +21,7 @@ def read_points(path):
     with open(path, 'r') as file:
         for line in file.readlines():
             coordinates = line.split(',')
-            points.append(Point(int(coordinates[0].strip()), int(coordinates[1].strip())))
+            points.append(Point(float(coordinates[0].strip()), float(coordinates[1].strip())))
     points.sort(key=lambda p: p.x)
     return points
 
@@ -64,7 +64,7 @@ def find_point_with_largest_distance(line_segment, points):
 
 def rec_quick_hull(line_segment, points):
     if len(points) == 0 or points is None:
-        return (line_segment[0], line_segment[1])
+        return [(line_segment[0], line_segment[1])]
     largest_distance_point = find_point_with_largest_distance(line_segment, points)
     upper_hull = []
 
@@ -83,8 +83,8 @@ def rec_quick_hull(line_segment, points):
     right_line_segment = (largest_distance_point, line_segment[1])
     right_pruned_points = prune(right_line_segment, right_points)
 
-    upper_hull.append(rec_quick_hull(left_line_segment, left_pruned_points))
-    upper_hull.append(rec_quick_hull(right_line_segment, right_pruned_points))
+    upper_hull.extend(rec_quick_hull(left_line_segment, left_pruned_points))
+    upper_hull.extend(rec_quick_hull(right_line_segment, right_pruned_points))
     return upper_hull
 
 

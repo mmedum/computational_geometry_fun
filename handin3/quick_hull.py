@@ -1,8 +1,8 @@
-from common import read_points, ccw, output_convex_hull
+from common import read_points, ccw
 
 
 def distance_point_to_line(p1, p2, p3):
-    return abs((p2.x - p1.x)*(p3.y - p1.y) - (p2.y - p1.y)*(p3.x - p1.x))
+    return abs((p2.x - p1.x) * (p3.y - p1.y) - (p2.y - p1.y) * (p3.x - p1.x))
 
 
 def prune(line_segment, points):
@@ -56,6 +56,12 @@ def quick_hull(points):
     line_segment = (smallest, largest)
     pruned_points = prune(line_segment, points[1:-2])
     return rec_quick_hull(line_segment, pruned_points)
+
+
+def output_convex_hull(title, convex_hull):
+    print(title)
+    for c in convex_hull:
+        print('({}, {})'.format(c[0], c[1]))
 
 
 if __name__ == '__main__':

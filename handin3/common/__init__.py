@@ -35,4 +35,4 @@ def ccw(p1, p2, p3):
 def output_convex_hull(title, convex_hull):
     print(title)
     for c in convex_hull:
-        print('({}, {})'.format(c[0], c[1]))
+        print(c)

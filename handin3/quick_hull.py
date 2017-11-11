@@ -1,42 +1,4 @@
-class Point:
-
-    def __init__(self, x, y):
-        self._x = x
-        self._y = y
-
-    @property
-    def x(self):
-        return self._x
-
-    @property
-    def y(self):
-        return self._y
-
-    def __str__(self):
-        return '{},{}'.format(self._x, self._y)
-
-
-def read_points(path):
-    points = []
-    with open(path, 'r') as file:
-        for line in file.readlines():
-            coordinates = line.split(',')
-            points.append(Point(float(coordinates[0].strip()), float(coordinates[1].strip())))
-    points.sort(key=lambda p: p.x)
-    return points
-
-
-def output_convex_hull(title, quick_hull):
-    print(title)
-    for c in quick_hull:
-        print('({}, {})'.format(c[0], c[1]))
-
-
-# Three points are a counter-clockwise turn if ccw > 0, clockwise if
-# ccw < 0, and collinear if ccw = 0 because ccw is a determinant that
-# gives twice the signed  area of the triangle formed by p1, p2 and p3.
-def sidedness_test(p1, p2, p3):
-    return (p2.x - p1.x)*(p3.y - p1.y) - (p2.y - p1.y)*(p3.x - p1.x)
+from common import read_points, ccw, output_convex_hull
 
 
 def distance_point_to_line(p1, p2, p3):
@@ -46,7 +8,7 @@ def distance_point_to_line(p1, p2, p3):
 def prune(line_segment, points):
     pruned_points = []
     for p in points:
-        if sidedness_test(line_segment[0], line_segment[1], p) >= 0:
+        if ccw(line_segment[0], line_segment[1], p) >= 0:
             pruned_points.append(p)
     return pruned_points
 

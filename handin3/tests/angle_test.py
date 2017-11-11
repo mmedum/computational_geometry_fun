@@ -1,0 +1,19 @@
+from gift_wrapping import angle
+
+if __name__ == '__main__':
+    v1 = [0, 1]
+    v2 = [0, 20]
+    ang = angle(v1, v2)
+    print("should be 0", ang)
+    v1 = [0, 1]
+    v2 = [1, 0]
+    ang = angle(v1, v2)
+    print("should be 90", ang)
+    v1 = [1, 1]
+    v2 = [1, 0]
+    ang = angle(v1, v2)
+    print("should be 45", ang)
+    v1 = [0, 1]
+    v2 = [-1, 0]
+    ang = angle(v1, v2)
+    print("should be 270", ang)

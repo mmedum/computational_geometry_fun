@@ -7,31 +7,28 @@ def gift_wrap(points):
     convex_hull = []
     # Init: Find the point q_1 with min x coordinate, and initialize an upward ray r from q1, and set pivot p = q_1
     q_1 = points[0]  # points are already sorted
-    p = q_1
+    pivot = q_1
     convex_hull.append(q_1)
-    r = [0, 100]  # upward
-    print("q_1", q_1)
+    r = [0, 10]  # upward
 
     # Do until p is q_1 again
-    for i in range(0, 10):
+    while True:
         min_angle = 360
         u = None
         for point in points:
-            if point == p:
+            if point == pivot:
                 continue
-            pu = [point.x - p.x, point.y - p.y]
+            pu = [point.x - pivot.x, point.y - pivot.y]
             ang = angle(r, pu)
             if ang < min_angle:
                 u = point
                 min_angle = ang
 
         convex_hull.append(u)
-        p = u
-        print(u, min_angle)
-        if p == q_1:
-            print("I should stop")
+        r = [u.x - pivot.x, u.y - pivot.y]
+        pivot = u
+        if pivot == q_1:
             break
-
     return convex_hull
 
 

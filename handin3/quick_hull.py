@@ -51,7 +51,6 @@ def rec_quick_hull(line_segment, points):
 
 
 def quick_hull(points):
-    points.sort(key=lambda p: p.x)
     smallest = points[0]
     largest = points[-1]
     line_segment = (smallest, largest)

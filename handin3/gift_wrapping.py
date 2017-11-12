@@ -51,5 +51,5 @@ def angle(v1, v2):
 
 if __name__ == '__main__':
     points = read_points('points')
-    upper_hull = gift_wrap(points)
-    output_convex_hull('gift_wrap', upper_hull)
+    convex_hull = gift_wrap(points)
+    output_convex_hull('gift_wrap', convex_hull)

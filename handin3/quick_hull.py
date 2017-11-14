@@ -53,12 +53,12 @@ def rec_quick_hull(line_segment, points):
 def quick_hull(points):
     smallest = Point(float('inf'), 0)
     largest = Point(float('-inf'), 0)
-    for p in points: 
-        if p.x <smallest.x:
+    for p in points:
+        if p.x < smallest.x:
             smallest = p
         if p.x > largest.x:
             largest = p
-    
+
     line_segment = (smallest, largest)
     points.remove(smallest)
     points.remove(largest)

@@ -1,15 +1,30 @@
-from common import read_points, output_convex_hull
+from common import read_points, output_convex_hull, linprog
+import random
 
 
 def marriage_before_conquest_v1(points):
-    # find the median (easy, since the points are already sorted)
-    median_index = int(len(points) / 2)
-    p_m = points[median_index]
-    p_l = points[:median_index - 1]  # all points smaller than median
-    p_r = points[median_index:]  # the rest
+    # Step 1
+    upper_hull = []
+    sample_elements = random.sample(points, 3)
+    sample_elements.sort(key=lambda p: p.x)
+    median_element = sample_elements[2]
+    print('Median element {}'.format(median_element))
 
-    return [p_m, p_l, p_r]
-    # return points
+    points_left = []
+    points_right = []
+    for p in points:
+        if p.x < median_element.x:
+            points_left.append(p)
+        else:
+            points_right.append(p)
+
+    linprog.lin_prog_2d(points, median_element)
+
+    upper_hull.extend(marriage_before_conquest_v1(points_left))
+    upper_hull.extend(marriage_before_conquest_v1(points_right))
+    print(upper_hull)
+
+    return upper_hull
 
 
 if __name__ == '__main__':

@@ -1,4 +1,4 @@
-from common import read_points, ccw
+from common import read_points, ccw, Point
 
 
 def distance_point_to_line(p1, p2, p3):
@@ -51,10 +51,18 @@ def rec_quick_hull(line_segment, points):
 
 
 def quick_hull(points):
-    smallest = points[0]
-    largest = points[-1]
+    smallest = Point(float('inf'), 0)
+    largest = Point(float('-inf'), 0)
+    for p in points: 
+        if p.x <smallest.x:
+            smallest = p
+        if p.x > largest.x:
+            largest = p
+    
     line_segment = (smallest, largest)
-    pruned_points = prune(line_segment, points[1:-2])
+    points.remove(smallest)
+    points.remove(largest)
+    pruned_points = prune(line_segment, points)
     return rec_quick_hull(line_segment, pruned_points)
 
 

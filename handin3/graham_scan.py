@@ -5,6 +5,7 @@ from common import read_points, ccw, output_convex_hull
 
 
 def graham_scan(points):
+    points.sort(key=lambda p: p.x)
     upper_hull = []
     for p in points:
         while len(upper_hull) > 1 and ccw(upper_hull[-2], upper_hull[-1], p) >= 0:

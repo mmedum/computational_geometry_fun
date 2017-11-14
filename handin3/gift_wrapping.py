@@ -1,12 +1,15 @@
 import numpy as np
 
-from common import read_points, output_convex_hull
+from common import read_points, output_convex_hull, Point
 
 
 def gift_wrap(points):
     convex_hull = []
     # Init: Find the point q_1 with min x coordinate, and initialize an upward ray r from q1, and set pivot p = q_1
-    q_1 = points[0]  # points are already sorted
+    q_1 = Point(float('inf'), 0) 
+    for p in points: 
+        if p.x<q_1.x:
+            q_1 = p
     pivot = q_1
     convex_hull.append(q_1)
     r = [0, 10]  # upward

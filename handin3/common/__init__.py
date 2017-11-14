@@ -24,7 +24,6 @@ def read_points(path):
         for line in file.readlines():
             coordinates = line.split(',')
             points.append(Point(float(coordinates[0].strip()), float(coordinates[1].strip())))
-    points.sort(key=lambda p: p.x)
     return points
 
 

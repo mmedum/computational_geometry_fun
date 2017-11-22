@@ -6,6 +6,9 @@ def linear_prog_1d(constraints, obj_function):
     right = float('inf')
     left = float('-inf')
 
+    print('TEST', constraints)
+    print('TEST!', obj_function)
+
     for constraint in constraints:
         if constraint.x == 0:
             if constraint.y > 0:
@@ -31,8 +34,6 @@ def linear_prog_1d(constraints, obj_function):
 
 
 def calculate_a_and_b(p, q):
-    print('P', p)
-    print('Q', q)
     a = (q.y - p.y) / (q.x - p.x)
     b = p.y - a * p.x
     return a, b
@@ -53,14 +54,16 @@ def linear_prog(points_left, points_right, median):
     points_right = points_right[1:]
     points_left.extend(points_right)
     for p in points_left:
-        constraints.append(p)
         if not satisfy(a, b, p):
             constraints_in_1d = []
             for c in constraints:
                 constraints_in_1d.append(point.Point(c.x - p.x, c.y - p.y))
             obj_function = median.x - p.x
             a = linear_prog_1d(constraints_in_1d, obj_function)
+            # TODO returns NONE check what the problem is
+            print('A', a)
             b = p.y - a * p.x
+        constraints.append(p)
     return a, b
 
 
@@ -114,7 +117,8 @@ def marriage_before_conquest_v1(points):
         else:
             points_right.append(p)
 
-    # TODO shuffle the shit
+    random.shuffle(points_left)
+    random.shuffle(points_right)
     a, b = linear_prog(points_left, points_right, median)
 
     min_left_point = find_min_point(a, b, points_left)

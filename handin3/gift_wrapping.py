@@ -1,6 +1,6 @@
 import numpy as np
 
-from common import read_points, output_convex_hull, Point
+from common.point import Point, read_points, output_convex_hull
 
 
 def gift_wrap(points):

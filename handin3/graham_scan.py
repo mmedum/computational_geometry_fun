@@ -1,7 +1,4 @@
-# Three points are a counter-clockwise turn if ccw > 0, clockwise if
-# ccw < 0, and collinear if ccw = 0 because ccw is a determinant that
-# gives twice the signed  area of the triangle formed by p1, p2 and p3.
-from common import read_points, ccw, output_convex_hull
+from common.point import ccw, read_points, output_convex_hull
 
 
 def graham_scan(points):

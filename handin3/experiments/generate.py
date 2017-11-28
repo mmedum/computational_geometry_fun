@@ -1,9 +1,16 @@
 import random
 
+from math import sqrt
+
 from common.point import Point
 
 
-def random_points_square(number=1000, max_x=100, max_y=100):
+def random_points_square(number=1000, max_x=None, max_y=None):
+    if max_x is None:
+        max_x = number / 10
+    if max_y is None:
+        max_y = number / 10
+
     points = []
     for i in range(1, number):
         x_cor = random.uniform(0, max_x)
@@ -12,7 +19,10 @@ def random_points_square(number=1000, max_x=100, max_y=100):
     return points
 
 
-def random_points_circle(number=1000, diameter=100):
+def random_points_circle(number=1000, diameter=None):
+    if diameter is None:
+        diameter = number / 10
+
     points = []
     radius = diameter / 2
     center_x = radius
@@ -29,11 +39,13 @@ def random_points_circle(number=1000, diameter=100):
     return points
 
 
-def random_points_curve(number=1000, max_x=100):
+def random_points_curve(number=1000, max_x=None):
+    if max_x is None:
+        max_x = number / 10
+
     points = []
     for i in range(1, number):
         x_cor = random.uniform(0, max_x)
-        y_cor = x_cor ** 2
+        y_cor = sqrt(x_cor)
         points.append(Point(x_cor, y_cor))
-
     return points

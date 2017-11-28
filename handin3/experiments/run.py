@@ -46,17 +46,17 @@ if __name__ == '__main__':
     generators = [random_points_square, random_points_circle, random_points_curve]
 
     # The algorithms we want to run the experiments for
-    algos = []
+    algorithms = []
     for arg in sys.argv[2:]:
         if arg == "quick_hull":
-            algos.append(quick_hull)
+            algorithms.append(quick_hull)
         elif arg == "gift_wrap":
-            algos.append(gift_wrap)
+            algorithms.append(gift_wrap)
         elif arg == "graham_scan":
-            algos.append(graham_scan)
+            algorithms.append(graham_scan)
 
-    # We run each algo in turn with each input class, increasing the number of points
-    for algo in algos:
+    # We run each algorithm in turn with each input class, increasing the number of points
+    for algorithm in algorithms:
         for generator in generators:
             for number in numbers:
-                experiment_run(generator, algo, number_of_points=number, repeats=5)
+                experiment_run(generator, algorithm, number_of_points=number, repeats=5)

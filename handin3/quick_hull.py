@@ -1,4 +1,4 @@
-from common import read_points, ccw, Point
+from common.point import ccw, Point, read_points
 
 
 def distance_point_to_line(p1, p2, p3):

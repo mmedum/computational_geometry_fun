@@ -1,7 +1,11 @@
 import time
 
+import sys
+
 from experiments.generate import random_points_square, random_points_circle, random_points_curve
+from gift_wrapping import gift_wrap
 from graham_scan import graham_scan
+from quick_hull import quick_hull
 
 
 def experiment_run(points_generator, algorithm, number_of_points=10000, repeats=3):
@@ -17,15 +21,42 @@ def experiment_run(points_generator, algorithm, number_of_points=10000, repeats=
         size_of_hull.append(len(convex_hull))
     avg_time = sum(timings) / len(timings)
     avg_hull_size = sum(size_of_hull) / len(size_of_hull)
-    print("{}: average time: {} seconds".format(generator.__name__, avg_time))
-    print("{}: average hull size: {} points".format(generator.__name__, avg_hull_size))
+
+    row = (str(i) for i in (number_of_points, avg_hull_size, avg_time))
+    with open(algorithm.__name__ + "_" + generator.__name__ + ".csv", "a") as csv_file:
+        csv_file.write(','.join(row))
+        csv_file.write('\n')
+
+    print("{} {} {}: average time: {} seconds"
+          .format(algorithm.__name__, number_of_points, generator.__name__, avg_time))
+    print("{} {} {}: average hull size: {} points"
+          .format(algorithm.__name__, number_of_points, generator.__name__, avg_hull_size))
 
 
 if __name__ == '__main__':
-    number = 1000000
-    generators = [random_points_square, random_points_circle, random_points_curve]
-    algos = [graham_scan]
+    numbers = []
+    start = 10000
+    upper_limit = int(sys.argv[1])
 
+    # Generate doubling numbers up to the limit
+    while start <= upper_limit:
+        numbers.append(start)
+        start *= 2
+    # The point generator functions
+    generators = [random_points_square, random_points_circle, random_points_curve]
+
+    # The algorithms we want to run the experiments for
+    algos = []
+    for arg in sys.argv[2:]:
+        if arg == "quick_hull":
+            algos.append(quick_hull)
+        elif arg == "gift_wrap":
+            algos.append(gift_wrap)
+        elif arg == "graham_scan":
+            algos.append(graham_scan)
+
+    # We run each algo in turn with each input class, increasing the number of points
     for algo in algos:
         for generator in generators:
-            experiment_run(generator, algo, number_of_points=number, repeats=1)
+            for number in numbers:
+                experiment_run(generator, algo, number_of_points=number, repeats=5)

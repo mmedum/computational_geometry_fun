@@ -37,18 +37,20 @@ def satisfy(a, b, constraint):
 
 
 def linear_prog(points_left, points_right, median):
-    a, b = calculate_a_and_b(points_left[0], points_right[0])
+    left = points_left[0]
+    right = points_right[0]
 
     if len(points_left) == 1 and len(points_right) == 1:
-        return a, b
+        return left, right
+
+    a, b = calculate_a_and_b(left, right)
 
     constraints = []
-    constraints.append(points_left[0])
-    constraints.append(points_right[0])
-    points_left = points_left[1:]
-    points_right = points_right[1:]
-    points_left.extend(points_right)
-    for p in points_left:
+    constraints.append(left)
+    constraints.append(right)
+    points = points_left[1:]
+    points.extend(points_right[1:])
+    for p in points:
         if not satisfy(a, b, p):
             constraints_in_1d = []
             for c in constraints:
@@ -89,13 +91,14 @@ def prune_right(line_segment, points):
 
 def marriage_before_conquest_v1(points):
     hull = []
-    # Step 1
     if len(points) <= 1:
-        return []
+        return hull
+
     if len(points) == 2:
         line_segment = [points[0], points[1]]
         hull.append(line_segment)
         return hull
+
     sample_elements = random.sample(points, 3)
     sample_elements.sort(key=lambda p: p.x)
     median = sample_elements[1]

@@ -4,26 +4,32 @@ import random
 
 def linear_prog_1d(constraints, obj_function):
     right = float('inf')
+    right_index = None
     left = float('-inf')
+    left_index = None
 
-    for constraint in constraints:
+    for i in range(0, len(constraints)):
+        constraint = constraints[i]
         if constraint.x == 0:
             if constraint.y > 0:
                 return None
         else:
             ratio = constraint.y / constraint.x
             if constraint.x > 0:
-                left = max(left, ratio)
-            else:
-                right = min(right, ratio)
+                if ratio > left:
+                    left = ratio
+                    left_index = i
+            elif ratio < right:
+                right = ratio
+                right_index = i
 
     if left > right:
         return None
 
     if obj_function >= 0:
-        return left
+        return (left, left_index)
     else:
-        return right
+        return (right, right_index)
 
 
 def calculate_a_and_b(p, q):
@@ -52,11 +58,11 @@ def linear_prog(points_left, points_right, median):
     points.extend(points_right[1:])
     for p in points:
         if not satisfy(a, b, p):
-            constraints_in_1d = []
+            linear_constraints = []
             for c in constraints:
-                constraints_in_1d.append(point.Point(c.x - p.x, c.y - p.y))
+                linear_constraints.append(point.Point(c.x - p.x, c.y - p.y))
             obj_function = median.x - p.x
-            a = linear_prog_1d(constraints_in_1d, obj_function)
+            a, index = linear_prog_1d(linear_constraints, obj_function)
             b = p.y - a * p.x
         constraints.append(p)
     return a, b

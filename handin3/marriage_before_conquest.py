@@ -125,7 +125,13 @@ def marriage_before_conquest_v1(points):
 
     min_left_point = find_min_point(a, b, points_left)
     min_right_point = find_min_point(a, b, points_right)
-    line_segment = [min_left_point, min_right_point]
+    line_segment = []
+    if min_left_point.x < min_right_point.x:
+        line_segment.append(min_left_point)
+        line_segment.append(min_right_point)
+    else:
+        line_segment.append(min_right_point)
+        line_segment.append(min_left_point)
 
     points_left = prune_left(line_segment, points_left)
     points_left.append(min_left_point)

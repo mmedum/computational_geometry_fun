@@ -5,6 +5,7 @@ import sys
 from experiments.generate import random_points_square, random_points_circle, random_points_curve
 from gift_wrapping import gift_wrap
 from graham_scan import graham_scan
+from marriage_before_conquest import marriage_before_conquest_v1
 from quick_hull import quick_hull
 
 
@@ -54,6 +55,8 @@ if __name__ == '__main__':
             algorithms.append(gift_wrap)
         elif arg == "graham_scan":
             algorithms.append(graham_scan)
+        elif arg == "marriage_before_conquest":
+            algorithms.append(marriage_before_conquest_v1)
 
     # We run each algorithm in turn with each input class, increasing the number of points
     for algorithm in algorithms:

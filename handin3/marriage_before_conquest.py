@@ -95,13 +95,24 @@ def prune_right(line_segment, points):
     return survived_points
 
 
+def order_coordinates(p, q):
+    line_segment = []
+    if p.x < q.x:
+        line_segment.append(p)
+        line_segment.append(q)
+    else:
+        line_segment.append(q)
+        line_segment.append(p)
+    return line_segment
+
+
 def marriage_before_conquest_v1(points):
     hull = []
     if len(points) <= 1:
         return hull
 
     if len(points) == 2:
-        line_segment = [points[0], points[1]]
+        line_segment = order_coordinates(points[0], points[1])
         hull.append(line_segment)
         return hull
 
@@ -125,13 +136,81 @@ def marriage_before_conquest_v1(points):
 
     min_left_point = find_min_point(a, b, points_left)
     min_right_point = find_min_point(a, b, points_right)
-    line_segment = []
-    if min_left_point.x < min_right_point.x:
-        line_segment.append(min_left_point)
-        line_segment.append(min_right_point)
-    else:
-        line_segment.append(min_right_point)
-        line_segment.append(min_left_point)
+
+    line_segment = order_coordinates(min_left_point, min_right_point)
+
+    points_left = prune_left(line_segment, points_left)
+    points_left.append(min_left_point)
+
+    points_right = prune_right(line_segment, points_right)
+    points_right.append(min_right_point)
+
+    hull.extend(marriage_before_conquest_v1(points_left))
+    hull.append(line_segment)
+    hull.extend(marriage_before_conquest_v1(points_right))
+
+    return hull
+
+
+def find_pl_and_pr(points):
+    p_l = point.Point(float('inf'), float('-inf'))
+    for p in points:
+        if p.x < p_l.x:
+            p_l = p
+
+    for p in points:
+        if p.x == p_l.x:
+            if p.y > p_l.y:
+                p_l = p
+
+    p_r = point.Point(float('-inf'), float('inf'))
+    for p in points:
+        if p.x > p_r.x:
+            p_r = p
+
+    for p in points:
+        if p.x == p_r.x:
+            if p.y < p_r.y:
+                p_r = p
+
+    return p_l, p_r
+
+
+def marriage_before_conquest_v2(points):
+    hull = []
+    if len(points) <= 1:
+        return hull
+
+    if len(points) == 2:
+        line_segment = order_coordinates(points[0], points[1])
+        hull.append(line_segment)
+        return hull
+
+    sample_elements = random.sample(points, 3)
+    sample_elements.sort(key=lambda p: p.x)
+    median = sample_elements[1]
+
+    p_l, p_r = find_pl_and_pr(points)
+    prune_a, prune_b = calculate_a_and_b(p_l, p_r)
+    points_left = []
+    points_right = []
+    for p in points:
+        if p.y < prune_a * p.x + prune_b:
+            continue
+        elif p is median:
+            points_left.append(p)
+        elif p.x < median.x:
+            points_left.append(p)
+        else:
+            points_right.append(p)
+
+    random.shuffle(points_left)
+    random.shuffle(points_right)
+    a, b = linear_prog(points_left, points_right, median)
+
+    min_left_point = find_min_point(a, b, points_left)
+    min_right_point = find_min_point(a, b, points_right)
+    line_segment = order_coordinates(min_left_point, min_right_point)
 
     points_left = prune_left(line_segment, points_left)
     points_left.append(min_left_point)
@@ -149,4 +228,6 @@ def marriage_before_conquest_v1(points):
 if __name__ == '__main__':
     points = point.read_points('points')
     convex_hull = marriage_before_conquest_v1(points)
+    print(convex_hull)
+    convex_hull = marriage_before_conquest_v2(points)
     print(convex_hull)
